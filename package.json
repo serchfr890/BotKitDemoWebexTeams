@@ -1,0 +1,18 @@
+{
+  "name": "botkit-webexdemobot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "botbuilder-adapter-webex": "^1.0.3",
+    "botbuilder-storage-mongodb": "^0.9.5",
+    "botkit": "^4.5.0",
+    "botkit-plugin-cms": "^1.0.2",
+    "dotenv": "^7.0.0",
+    "nodemon": "^1.19.2",
+    "request": "^2.88.0"
+  }
+}
