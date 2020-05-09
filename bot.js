@@ -7,7 +7,7 @@
 // Import Botkit's core features
 const { Botkit } = require('botkit');
 const { BotkitCMSHelper } = require('botkit-plugin-cms');
-
+const config = require("./config.json");
 
 // Import a platform-specific adapter for webex.
 
@@ -29,16 +29,14 @@ if (process.env.MONGO_URI) {
 const adapter = new WebexAdapter({
     // REMOVE THIS OPTION AFTER YOU HAVE CONFIGURED YOUR APP!
     secret: process.env.secret,
-    access_token: process.env.access_token,
-    public_address: process.env.public_address
+    access_token: config.token,
+    public_address: config.webhookUrl
 })    
 
 
 const controller = new Botkit({
     webhook_uri: '/api/messages',
-
     adapter: adapter,
-
     storage
 });
  
@@ -54,7 +52,7 @@ controller.ready(() => {
     // load traditional developer-created local custom feature modules
     controller.loadModules(__dirname + '/features');
     /* catch-all that uses the CMS to trigger dialogs */
-    if (controller.plugins.cms) { 
+    if (controller.plugins.cms) {
         controller.on('message,direct_message', async (bot, message) => {
             console.log('bot', bot)
             let results = false;
