@@ -5,7 +5,7 @@
 // This is the main file for the WebexDemoBot bot.
 
 // Import Botkit's core features
-const { Botkit } = require('botkit');
+const { Botkit }  = require('botkit');
 const { BotkitCMSHelper } = require('botkit-plugin-cms');
 const config = require("./config.json");
 
@@ -18,13 +18,17 @@ const { MongoDbStorage } = require('botbuilder-storage-mongodb');
 // Load process.env values from .env file
 require('dotenv').config();
 
-let storage = null;
-if (process.env.MONGO_URI) {
-    storage = mongoStorage = new MongoDbStorage({
-        url : process.env.MONGO_URI,
-    });
-}
 
+//if (process.env.MONGO_URI) {
+
+let storage = null
+
+    storage = mongoStorage = new MongoDbStorage({
+        url : "mongodb://localhost:27017/",
+        database: "botframework",
+        collection: "botframework"
+    });
+//}
 
 const adapter = new WebexAdapter({
     // REMOVE THIS OPTION AFTER YOU HAVE CONFIGURED YOUR APP!
@@ -37,7 +41,8 @@ const adapter = new WebexAdapter({
 const controller = new Botkit({
     webhook_uri: '/api/messages',
     adapter: adapter,
-    storage
+    storage: storage
+
 });
  
 if (process.env.cms_uri) {
@@ -48,11 +53,14 @@ if (process.env.cms_uri) {
 }
 
 // Once the bot has booted up its internal services, you can use them to do stuff.
-controller.ready(() => {     
+controller.ready(() => {
     // load traditional developer-created local custom feature modules
     controller.loadModules(__dirname + '/features');
     /* catch-all that uses the CMS to trigger dialogs */
     if (controller.plugins.cms) {
+
+
+
         controller.on('message,direct_message', async (bot, message) => {
             console.log('bot', bot)
             let results = false;
