@@ -5,12 +5,14 @@
 // This is the main file for the WebexDemoBot bot.
 
 // Import Botkit's core features
+
+
+const ENVIRONMENTS = require('./environments/environments_variables');
 const { Botkit }  = require('botkit');
 const { BotkitCMSHelper } = require('botkit-plugin-cms');
 const config = require("./config.json");
 
 // Import a platform-specific adapter for webex.
-
 const { WebexAdapter } = require('botbuilder-adapter-webex');
 
 const { MongoDbStorage } = require('botbuilder-storage-mongodb');
@@ -26,11 +28,7 @@ const recognizer = new LuisRecognizer({
     applicationId: "ca51c6c1-0ed2-4795-8e76-bb50927d5a6a",
     endpointKey: "71b54188faf14158ac61563a80287642",
     endpoint: "https://westus.api.cognitive.microsoft.com/"
-
 });
-
-
-
 
 let storage = null
 
@@ -39,10 +37,9 @@ let storage = null
         database: "botframework",
         collection: "botframework"
     });
-//}
 
+// Configuración para el adaptador de Webex Teamns
 const adapter = new WebexAdapter({
-    // REMOVE THIS OPTION AFTER YOU HAVE CONFIGURED YOUR APP!
     secret: process.env.secret,
     access_token: config.token,
     public_address: config.webhookUrl
@@ -55,20 +52,17 @@ const controller = new Botkit({
     storage: storage
 });
 
-
+// Configuración del Middleware LUIS
 controller.middleware.ingest.use(async (bot, message, next) => {
     if (message.incoming_message.type === 'message') {
         const results = await recognizer.recognize(message.context);
-        message.intent = LuisRecognizer.topIntent(results, 'None', 0 || 0.7);
+        message.intent = LuisRecognizer.topIntent(results, ENVIRONMENTS.INTENT_NAMES.NONE, 0 || 0.7);
         message.entity = results.entities.Ticket;
         console.log('recognized', message.intent);
     }
-
     next();
 });
 
-
- 
 if (process.env.cms_uri) {
     controller.usePlugin(new BotkitCMSHelper({
         uri: process.env.cms_uri,
@@ -83,9 +77,6 @@ controller.ready(() => {
     /* catch-all that uses the CMS to trigger dialogs */
 
     if (controller.plugins.cms) {
-
-
-
         controller.on('message,direct_message', async (bot, message) => {
             console.log('bot', bot)
             let results = false;
@@ -97,10 +88,8 @@ controller.ready(() => {
             }
         });
       }
-
 });
 
 controller.webserver.get('/', (req, res) => {
     res.send(`This app is running Botkit ${ controller.version }.`);
-
 });

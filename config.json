@@ -1,6 +1,5 @@
 {
-  "webhookUrl": "https://dfd7db9a.ngrok.io",
+  "webhookUrl": "https://c07ded68.ngrok.io",
   "token": "YWIwYjhiNDctMzViNC00NDkzLTg2ZTktNTUwZTg2MDBhZjljZTU4YzkyYmYtZDVl_PF84_b4e50a79-b7de-4ee2-940a-a983d1e5c35b",
-  "port": 7001,
   "mongoUrl": "mongodb://127.0.0.1:27017/"
 }
