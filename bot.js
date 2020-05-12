@@ -23,20 +23,20 @@ require('dotenv').config();
 //if (process.env.MONGO_URI) {
 
 const { LuisRecognizer } = require('botbuilder-ai');
-// Luis Section
+// Configuración para LUIS
 const recognizer = new LuisRecognizer({
     applicationId: "ca51c6c1-0ed2-4795-8e76-bb50927d5a6a",
     endpointKey: "71b54188faf14158ac61563a80287642",
     endpoint: "https://westus.api.cognitive.microsoft.com/"
 });
 
-let storage = null
 
-    storage = mongoStorage = new MongoDbStorage({
-        url : "mongodb://localhost:27017/",
-        database: "botframework",
-        collection: "botframework"
-    });
+// Configuración de base de datos mongo para BotState
+let storage = mongoStorage = new MongoDbStorage({
+    url : "mongodb://localhost:27017/",
+    database: "botframework",
+    collection: "botframework"
+});
 
 // Configuración para el adaptador de Webex Teamns
 const adapter = new WebexAdapter({
@@ -44,7 +44,6 @@ const adapter = new WebexAdapter({
     access_token: config.token,
     public_address: config.webhookUrl
 })    
-
 
 const controller = new Botkit({
     webhook_uri: '/api/messages',
