@@ -18,8 +18,19 @@ const { MongoDbStorage } = require('botbuilder-storage-mongodb');
 // Load process.env values from .env file
 require('dotenv').config();
 
-
 //if (process.env.MONGO_URI) {
+
+const { LuisRecognizer } = require('botbuilder-ai');
+// Luis Section
+const recognizer = new LuisRecognizer({
+    applicationId: "ca51c6c1-0ed2-4795-8e76-bb50927d5a6a",
+    endpointKey: "71b54188faf14158ac61563a80287642",
+    endpoint: "https://westus.api.cognitive.microsoft.com/"
+
+});
+
+
+
 
 let storage = null
 
@@ -42,8 +53,21 @@ const controller = new Botkit({
     webhook_uri: '/api/messages',
     adapter: adapter,
     storage: storage
-
 });
+
+
+controller.middleware.ingest.use(async (bot, message, next) => {
+    if (message.incoming_message.type === 'message') {
+        const results = await recognizer.recognize(message.context);
+        message.intent = LuisRecognizer.topIntent(results, 'None', 0 || 0.7);
+        message.entity = results.entities.Ticket;
+        console.log('recognized', message.intent);
+    }
+
+    next();
+});
+
+
  
 if (process.env.cms_uri) {
     controller.usePlugin(new BotkitCMSHelper({
@@ -57,6 +81,7 @@ controller.ready(() => {
     // load traditional developer-created local custom feature modules
     controller.loadModules(__dirname + '/features');
     /* catch-all that uses the CMS to trigger dialogs */
+
     if (controller.plugins.cms) {
 
 

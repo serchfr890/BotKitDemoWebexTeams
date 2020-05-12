@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "botbuilder-adapter-webex": "^1.0.3",
+    "botbuilder-ai": "^4.8.0",
     "botbuilder-storage-mongodb": "^0.9.5",
     "botkit": "^4.5.0",
+    "botkit-middleware-luis": "^1.0.0",
     "botkit-plugin-cms": "^1.0.2",
     "botkit-storage-mongo": "^1.0.7",
     "dotenv": "^7.0.0",
